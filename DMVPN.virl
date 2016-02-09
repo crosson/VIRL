@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.9" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.9/virl.xsd">
-    <node ipv4="192.168.0.8" location="680,283" subtype="IOSv" type="SIMPLE" name="isp">
+    <extensions>
+        <entry type="String" key="management_network">flat</entry>
+        <entry type="String" key="AutoNetkit.address_family">None</entry>
+        <entry type="Boolean" key="AutoNetkit.enable_routing">false</entry>
+    </extensions>
+    <node ipv4="192.168.0.9" location="322,295" subtype="IOSv" type="SIMPLE" name="ispa">
         <extensions>
-            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:28
+            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:36
 ! by autonetkit_0.20.9
 !
-hostname isp
+hostname ispa
 boot-start-marker
 boot-end-marker
 !
@@ -52,7 +57,7 @@ no cdp run
 !
 interface Loopback0
   description Loopback
-  ip address 192.168.0.8 255.255.255.255
+  no ip address
 !
 interface GigabitEthernet0/0
   description OOB Management
@@ -65,79 +70,40 @@ interface GigabitEthernet0/0
 !
 interface GigabitEthernet0/1
   description to hub1
-  ip address 10.0.0.10 255.255.255.252
-  ip ospf cost 1
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/2
   description to hub2
-  ip address 10.0.0.14 255.255.255.252
-  ip ospf cost 1
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/3
   description to spokea
-  ip address 10.0.0.5 255.255.255.252
-  ip ospf cost 1
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/4
   description to spokeb
-  ip address 10.0.128.10 255.255.255.252
-  ip ospf cost 1
+  no ip address
+  duplex full
+  speed auto
+  no shutdown
+!
+interface GigabitEthernet0/5
+  description to ispb
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 !
-!
-router ospf 1
-  network 192.168.0.8 0.0.0.0 area 0
-  log-adjacency-changes
-  passive-interface Loopback0
-  network 10.0.0.8 0.0.0.3 area 0
-  network 10.0.0.12 0.0.0.3 area 0
-  network 10.0.0.4 0.0.0.3 area 0
-  network 10.0.128.8 0.0.0.3 area 0
-!
-!
-router bgp 1
-  bgp router-id 192.168.0.8
-  no synchronization
-! ibgp
-  ! ibgp peers
-  !
-  neighbor 192.168.0.1 remote-as 1
-  neighbor 192.168.0.1 description iBGP peer hub1
-  neighbor 192.168.0.1 update-source Loopback0
-  !
-  neighbor 192.168.0.2 remote-as 1
-  neighbor 192.168.0.2 description iBGP peer hub2
-  neighbor 192.168.0.2 update-source Loopback0
-  !
-  neighbor 192.168.0.6 remote-as 1
-  neighbor 192.168.0.6 description iBGP peer spokea
-  neighbor 192.168.0.6 update-source Loopback0
-  !
-  neighbor 192.168.0.5 remote-as 1
-  neighbor 192.168.0.5 description iBGP peer spokeb
-  neighbor 192.168.0.5 update-source Loopback0
-!
-!
- !
- address-family ipv4
-  network 192.168.0.8 mask 255.255.255.255
-  neighbor 192.168.0.1 activate
-  neighbor 192.168.0.2 activate
-  neighbor 192.168.0.6 activate
-  neighbor 192.168.0.5 activate
- exit-address-family
 !
 !
 !
@@ -145,14 +111,15 @@ end
 </entry>
             <entry type="string" key="AutoNetkit.mgmt_ip"></entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.10" name="GigabitEthernet0/1" id="0"/>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.14" name="GigabitEthernet0/2" id="1"/>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.5" name="GigabitEthernet0/3" id="2"/>
-        <interface netPrefixLenV4="30" ipv4="10.0.128.10" name="GigabitEthernet0/4" id="3"/>
+        <interface name="GigabitEthernet0/1" id="0"/>
+        <interface name="GigabitEthernet0/2" id="1"/>
+        <interface name="GigabitEthernet0/3" id="2"/>
+        <interface name="GigabitEthernet0/4" id="3"/>
+        <interface name="GigabitEthernet0/5" id="4"/>
     </node>
-    <node ipv4="192.168.0.1" location="625,183" subtype="IOSv" type="SIMPLE" name="hub1">
+    <node ipv4="192.168.0.1" location="267,195" subtype="IOSv" type="SIMPLE" name="hub1">
         <extensions>
-            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:28
+            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:36
 ! by autonetkit_0.20.9
 !
 hostname hub1
@@ -202,7 +169,7 @@ no cdp run
 !
 interface Loopback0
   description Loopback
-  ip address 192.168.0.1 255.255.255.255
+  no ip address
 !
 interface GigabitEthernet0/0
   description OOB Management
@@ -214,62 +181,20 @@ interface GigabitEthernet0/0
   no shutdown
 !
 interface GigabitEthernet0/1
-  description to isp
-  ip address 10.0.0.9 255.255.255.252
-  ip ospf cost 1
+  description to ispa
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/2
   description to iosvl2-1
-  ip address 10.0.128.1 255.255.255.248
-  ip ospf cost 1
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 !
-!
-router ospf 1
-  network 192.168.0.1 0.0.0.0 area 0
-  log-adjacency-changes
-  passive-interface Loopback0
-  network 10.0.0.8 0.0.0.3 area 0
-  network 10.0.128.0 0.0.0.7 area 0
-!
-!
-router bgp 1
-  bgp router-id 192.168.0.1
-  no synchronization
-! ibgp
-  ! ibgp peers
-  !
-  neighbor 192.168.0.2 remote-as 1
-  neighbor 192.168.0.2 description iBGP peer hub2
-  neighbor 192.168.0.2 update-source Loopback0
-  !
-  neighbor 192.168.0.8 remote-as 1
-  neighbor 192.168.0.8 description iBGP peer isp
-  neighbor 192.168.0.8 update-source Loopback0
-  !
-  neighbor 192.168.0.6 remote-as 1
-  neighbor 192.168.0.6 description iBGP peer spokea
-  neighbor 192.168.0.6 update-source Loopback0
-  !
-  neighbor 192.168.0.5 remote-as 1
-  neighbor 192.168.0.5 description iBGP peer spokeb
-  neighbor 192.168.0.5 update-source Loopback0
-!
-!
- !
- address-family ipv4
-  network 192.168.0.1 mask 255.255.255.255
-  neighbor 192.168.0.2 activate
-  neighbor 192.168.0.8 activate
-  neighbor 192.168.0.6 activate
-  neighbor 192.168.0.5 activate
- exit-address-family
 !
 !
 !
@@ -277,12 +202,12 @@ end
 </entry>
             <entry type="string" key="AutoNetkit.mgmt_ip"></entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.9" name="GigabitEthernet0/1" id="0"/>
-        <interface netPrefixLenV4="29" ipv4="10.0.128.1" name="GigabitEthernet0/2" id="1"/>
+        <interface name="GigabitEthernet0/1" id="0"/>
+        <interface name="GigabitEthernet0/2" id="1"/>
     </node>
-    <node ipv4="192.168.0.2" location="738,169" subtype="IOSv" type="SIMPLE" name="hub2">
+    <node ipv4="192.168.0.2" location="380,181" subtype="IOSv" type="SIMPLE" name="hub2">
         <extensions>
-            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:28
+            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:36
 ! by autonetkit_0.20.9
 !
 hostname hub2
@@ -332,7 +257,7 @@ no cdp run
 !
 interface Loopback0
   description Loopback
-  ip address 192.168.0.2 255.255.255.255
+  no ip address
 !
 interface GigabitEthernet0/0
   description OOB Management
@@ -344,62 +269,20 @@ interface GigabitEthernet0/0
   no shutdown
 !
 interface GigabitEthernet0/1
-  description to isp
-  ip address 10.0.0.13 255.255.255.252
-  ip ospf cost 1
+  description to ispa
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/2
   description to iosvl2-1
-  ip address 10.0.128.2 255.255.255.248
-  ip ospf cost 1
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 !
-!
-router ospf 1
-  network 192.168.0.2 0.0.0.0 area 0
-  log-adjacency-changes
-  passive-interface Loopback0
-  network 10.0.0.12 0.0.0.3 area 0
-  network 10.0.128.0 0.0.0.7 area 0
-!
-!
-router bgp 1
-  bgp router-id 192.168.0.2
-  no synchronization
-! ibgp
-  ! ibgp peers
-  !
-  neighbor 192.168.0.1 remote-as 1
-  neighbor 192.168.0.1 description iBGP peer hub1
-  neighbor 192.168.0.1 update-source Loopback0
-  !
-  neighbor 192.168.0.8 remote-as 1
-  neighbor 192.168.0.8 description iBGP peer isp
-  neighbor 192.168.0.8 update-source Loopback0
-  !
-  neighbor 192.168.0.6 remote-as 1
-  neighbor 192.168.0.6 description iBGP peer spokea
-  neighbor 192.168.0.6 update-source Loopback0
-  !
-  neighbor 192.168.0.5 remote-as 1
-  neighbor 192.168.0.5 description iBGP peer spokeb
-  neighbor 192.168.0.5 update-source Loopback0
-!
-!
- !
- address-family ipv4
-  network 192.168.0.2 mask 255.255.255.255
-  neighbor 192.168.0.1 activate
-  neighbor 192.168.0.8 activate
-  neighbor 192.168.0.6 activate
-  neighbor 192.168.0.5 activate
- exit-address-family
 !
 !
 !
@@ -407,12 +290,12 @@ end
 </entry>
             <entry type="string" key="AutoNetkit.mgmt_ip"></entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.13" name="GigabitEthernet0/1" id="0"/>
-        <interface netPrefixLenV4="29" ipv4="10.0.128.2" name="GigabitEthernet0/2" id="1"/>
+        <interface name="GigabitEthernet0/1" id="0"/>
+        <interface name="GigabitEthernet0/2" id="1"/>
     </node>
-    <node ipv4="192.168.0.6" location="524,406" subtype="IOSv" type="SIMPLE" name="spokea">
+    <node ipv4="192.168.0.7" location="166,418" subtype="IOSv" type="SIMPLE" name="spokea">
         <extensions>
-            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:28
+            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:36
 ! by autonetkit_0.20.9
 !
 hostname spokea
@@ -462,7 +345,7 @@ no cdp run
 !
 interface Loopback0
   description Loopback
-  ip address 192.168.0.6 255.255.255.255
+  no ip address
 !
 interface GigabitEthernet0/0
   description OOB Management
@@ -474,62 +357,27 @@ interface GigabitEthernet0/0
   no shutdown
 !
 interface GigabitEthernet0/1
-  description to isp
-  ip address 10.0.0.6 255.255.255.252
-  ip ospf cost 1
+  description to ispa
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/2
   description to hosta
-  ip address 10.0.0.1 255.255.255.252
-  ip ospf cost 1
+  no ip address
+  duplex full
+  speed auto
+  no shutdown
+!
+interface GigabitEthernet0/3
+  description to ispb
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 !
-!
-router ospf 1
-  network 192.168.0.6 0.0.0.0 area 0
-  log-adjacency-changes
-  passive-interface Loopback0
-  network 10.0.0.4 0.0.0.3 area 0
-  network 10.0.0.0 0.0.0.3 area 0
-!
-!
-router bgp 1
-  bgp router-id 192.168.0.6
-  no synchronization
-! ibgp
-  ! ibgp peers
-  !
-  neighbor 192.168.0.1 remote-as 1
-  neighbor 192.168.0.1 description iBGP peer hub1
-  neighbor 192.168.0.1 update-source Loopback0
-  !
-  neighbor 192.168.0.2 remote-as 1
-  neighbor 192.168.0.2 description iBGP peer hub2
-  neighbor 192.168.0.2 update-source Loopback0
-  !
-  neighbor 192.168.0.8 remote-as 1
-  neighbor 192.168.0.8 description iBGP peer isp
-  neighbor 192.168.0.8 update-source Loopback0
-  !
-  neighbor 192.168.0.5 remote-as 1
-  neighbor 192.168.0.5 description iBGP peer spokeb
-  neighbor 192.168.0.5 update-source Loopback0
-!
-!
- !
- address-family ipv4
-  network 192.168.0.6 mask 255.255.255.255
-  neighbor 192.168.0.1 activate
-  neighbor 192.168.0.2 activate
-  neighbor 192.168.0.8 activate
-  neighbor 192.168.0.5 activate
- exit-address-family
 !
 !
 !
@@ -537,12 +385,13 @@ end
 </entry>
             <entry type="string" key="AutoNetkit.mgmt_ip"></entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.6" name="GigabitEthernet0/1" id="0"/>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.1" name="GigabitEthernet0/2" id="1"/>
+        <interface name="GigabitEthernet0/1" id="0"/>
+        <interface name="GigabitEthernet0/2" id="1"/>
+        <interface name="GigabitEthernet0/3" id="2"/>
     </node>
-    <node ipv4="192.168.0.5" location="904,408" subtype="IOSv" type="SIMPLE" name="spokeb">
+    <node ipv4="192.168.0.4" location="546,420" subtype="IOSv" type="SIMPLE" name="spokeb">
         <extensions>
-            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:28
+            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:36
 ! by autonetkit_0.20.9
 !
 hostname spokeb
@@ -592,7 +441,7 @@ no cdp run
 !
 interface Loopback0
   description Loopback
-  ip address 192.168.0.5 255.255.255.255
+  no ip address
 !
 interface GigabitEthernet0/0
   description OOB Management
@@ -604,62 +453,20 @@ interface GigabitEthernet0/0
   no shutdown
 !
 interface GigabitEthernet0/1
-  description to isp
-  ip address 10.0.128.9 255.255.255.252
-  ip ospf cost 1
+  description to ispa
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 interface GigabitEthernet0/2
   description to hostb
-  ip address 10.0.128.13 255.255.255.252
-  ip ospf cost 1
+  no ip address
   duplex full
   speed auto
   no shutdown
 !
 !
-!
-router ospf 1
-  network 192.168.0.5 0.0.0.0 area 0
-  log-adjacency-changes
-  passive-interface Loopback0
-  network 10.0.128.8 0.0.0.3 area 0
-  network 10.0.128.12 0.0.0.3 area 0
-!
-!
-router bgp 1
-  bgp router-id 192.168.0.5
-  no synchronization
-! ibgp
-  ! ibgp peers
-  !
-  neighbor 192.168.0.1 remote-as 1
-  neighbor 192.168.0.1 description iBGP peer hub1
-  neighbor 192.168.0.1 update-source Loopback0
-  !
-  neighbor 192.168.0.2 remote-as 1
-  neighbor 192.168.0.2 description iBGP peer hub2
-  neighbor 192.168.0.2 update-source Loopback0
-  !
-  neighbor 192.168.0.8 remote-as 1
-  neighbor 192.168.0.8 description iBGP peer isp
-  neighbor 192.168.0.8 update-source Loopback0
-  !
-  neighbor 192.168.0.6 remote-as 1
-  neighbor 192.168.0.6 description iBGP peer spokea
-  neighbor 192.168.0.6 update-source Loopback0
-!
-!
- !
- address-family ipv4
-  network 192.168.0.5 mask 255.255.255.255
-  neighbor 192.168.0.1 activate
-  neighbor 192.168.0.2 activate
-  neighbor 192.168.0.8 activate
-  neighbor 192.168.0.6 activate
- exit-address-family
 !
 !
 !
@@ -667,10 +474,10 @@ end
 </entry>
             <entry type="string" key="AutoNetkit.mgmt_ip"></entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.128.9" name="GigabitEthernet0/1" id="0"/>
-        <interface netPrefixLenV4="30" ipv4="10.0.128.13" name="GigabitEthernet0/2" id="1"/>
+        <interface name="GigabitEthernet0/1" id="0"/>
+        <interface name="GigabitEthernet0/2" id="1"/>
     </node>
-    <node location="464,497" subtype="server" type="SIMPLE" name="hosta">
+    <node location="106,509" subtype="server" type="SIMPLE" name="hosta">
         <extensions>
             <entry type="string" key="config">#cloud-config
 bootcmd:
@@ -718,20 +525,11 @@ write_files:
     RemainAfterExit=yes
   owner: root:root
   permissions: '0644'
-- path: /etc/rc.local
-  owner: root:root
-  permissions: '0755'
-  content: |-
-    #!/bin/sh
-    ifconfig eth1 up 10.0.0.2 netmask 255.255.255.252
-    route add -net 10.0.0.0/16 gw 10.0.0.1 dev eth1
-    route add -net 192.168.0.0/28 gw 10.0.0.1 dev eth1
-    exit 0
 </entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.0.2" name="eth1" id="0"/>
+        <interface name="eth1" id="0"/>
     </node>
-    <node location="1043,482" subtype="server" type="SIMPLE" name="hostb">
+    <node location="685,494" subtype="server" type="SIMPLE" name="hostb">
         <extensions>
             <entry type="string" key="config">#cloud-config
 bootcmd:
@@ -779,22 +577,13 @@ write_files:
     RemainAfterExit=yes
   owner: root:root
   permissions: '0644'
-- path: /etc/rc.local
-  owner: root:root
-  permissions: '0755'
-  content: |-
-    #!/bin/sh
-    ifconfig eth1 up 10.0.128.14 netmask 255.255.255.252
-    route add -net 10.0.0.0/16 gw 10.0.128.13 dev eth1
-    route add -net 192.168.0.0/28 gw 10.0.128.13 dev eth1
-    exit 0
 </entry>
         </extensions>
-        <interface netPrefixLenV4="30" ipv4="10.0.128.14" name="eth1" id="0"/>
+        <interface name="eth1" id="0"/>
     </node>
-    <node location="665,99" subtype="IOSvL2" type="SIMPLE" name="iosvl2-1">
+    <node location="307,111" subtype="IOSvL2" type="SIMPLE" name="iosvl2-1">
         <extensions>
-            <entry type="string" key="config">! IOSvL2 Config generated on 2016-02-09 06:28
+            <entry type="string" key="config">! IOSvL2 Config generated on 2016-02-09 06:36
 ! by autonetkit_0.20.9
 !
 version 15.2
@@ -913,7 +702,7 @@ end
         <interface name="GigabitEthernet0/2" id="1"/>
         <interface name="GigabitEthernet0/3" id="2"/>
     </node>
-    <node location="694,20" subtype="server" type="SIMPLE" name="hubhost">
+    <node location="336,32" subtype="server" type="SIMPLE" name="hubhost">
         <extensions>
             <entry type="string" key="config">#cloud-config
 bootcmd:
@@ -961,20 +750,97 @@ write_files:
     RemainAfterExit=yes
   owner: root:root
   permissions: '0644'
-- path: /etc/rc.local
-  owner: root:root
-  permissions: '0755'
-  content: |-
-    #!/bin/sh
-    ifconfig eth1 up 10.0.128.3 netmask 255.255.255.248
-    route add -net 10.0.0.0/16 gw 10.0.128.1 dev eth1
-    route add -net 192.168.0.0/28 gw 10.0.128.1 dev eth1
-    route add -net 10.0.0.0/16 gw 10.0.128.2 dev eth1
-    route add -net 192.168.0.0/28 gw 10.0.128.2 dev eth1
-    exit 0
 </entry>
         </extensions>
-        <interface netPrefixLenV4="29" ipv4="10.0.128.3" name="eth1" id="0"/>
+        <interface name="eth1" id="0"/>
+    </node>
+    <node ipv4="192.168.0.5" location="332,389" subtype="IOSv" type="SIMPLE" name="ispb">
+        <extensions>
+            <entry type="string" key="config">! IOS Config generated on 2016-02-09 06:36
+! by autonetkit_0.20.9
+!
+hostname ispb
+boot-start-marker
+boot-end-marker
+!
+vrf definition Mgmt-intf
+!
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+!
+no aaa new-model
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+no service config
+enable password cisco
+ip classless
+ip subnet-zero
+no ip domain lookup
+ip domain name virl.info
+crypto key generate rsa modulus 768
+ip ssh server algorithm authentication password
+username cisco privilege 15 secret cisco
+line vty 0 4
+ transport input ssh telnet
+ exec-timeout 720 0
+ password cisco
+ login local
+line con 0
+ password cisco
+!
+no cdp run
+!
+!
+interface Loopback0
+  description Loopback
+  no ip address
+!
+interface GigabitEthernet0/0
+  description OOB Management
+  vrf forwarding Mgmt-intf
+  ! Configured on launch
+  no ip address
+  duplex full
+  speed auto
+  no shutdown
+!
+interface GigabitEthernet0/1
+  description to spokea
+  no ip address
+  duplex full
+  speed auto
+  no shutdown
+!
+interface GigabitEthernet0/2
+  description to ispa
+  no ip address
+  duplex full
+  speed auto
+  no shutdown
+!
+!
+!
+!
+!
+end
+</entry>
+            <entry type="string" key="AutoNetkit.mgmt_ip"></entry>
+        </extensions>
+        <interface name="GigabitEthernet0/1" id="0"/>
+        <interface name="GigabitEthernet0/2" id="1"/>
     </node>
     <connection src="/virl:topology/virl:node[2]/virl:interface[1]" dst="/virl:topology/virl:node[1]/virl:interface[1]"/>
     <connection src="/virl:topology/virl:node[3]/virl:interface[1]" dst="/virl:topology/virl:node[1]/virl:interface[2]"/>
@@ -985,4 +851,6 @@ write_files:
     <connection src="/virl:topology/virl:node[1]/virl:interface[4]" dst="/virl:topology/virl:node[5]/virl:interface[1]"/>
     <connection src="/virl:topology/virl:node[6]/virl:interface[1]" dst="/virl:topology/virl:node[4]/virl:interface[2]"/>
     <connection src="/virl:topology/virl:node[7]/virl:interface[1]" dst="/virl:topology/virl:node[5]/virl:interface[2]"/>
+    <connection src="/virl:topology/virl:node[10]/virl:interface[1]" dst="/virl:topology/virl:node[4]/virl:interface[3]"/>
+    <connection src="/virl:topology/virl:node[10]/virl:interface[2]" dst="/virl:topology/virl:node[1]/virl:interface[5]"/>
 </topology>
